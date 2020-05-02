@@ -14,11 +14,10 @@ Item {
     property int buttonWidth: 90
 
     Column {
+        id: column
         spacing: 10
         topPadding: parentPadding
         leftPadding: parentPadding
-
-
 
         anchors.left: parent.left
         Row {
@@ -29,14 +28,16 @@ Item {
                 height: rowHeight
                 topPadding: textTopPadding
                 anchors.top: parent.top
-                text: qsTr("URL:")
+                text: "url"
             }
 
             TextField {
                 id: urlText
-                width: textFieldWidth;
+                width: textFieldWidth
+                text: "https://dou.ua"
                 height: rowHeight
                 selectByMouse: true
+                validator: RegExpValidator { regExp: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/ }
                 placeholderText: qsTr("https://en.cppreference.com/w/")
             }
         }
@@ -52,12 +53,11 @@ Item {
                 text: qsTr("Threads:")
             }
 
-            TextField {
+            SpinBox {
                 id: threadsText
                 width: textFieldWidth;
                 height: rowHeight
-                selectByMouse: true
-                placeholderText: qsTr("4")
+                value: 4
             }
         }
 
@@ -77,6 +77,7 @@ Item {
                 width: textFieldWidth;
                 height: rowHeight
                 selectByMouse: true
+                validator: IntValidator {bottom: 1; top: 1000}
                 placeholderText: qsTr("100")
             }
         }
@@ -93,7 +94,7 @@ Item {
             }
 
             TextField {
-                id: searchLabelText
+                id: searchText
                 width: textFieldWidth;
                 height: rowHeight
                 selectByMouse: true
@@ -109,6 +110,10 @@ Item {
                 id: startButton
                 width: buttonWidth
                 text: qsTr("Start")
+                onClicked: {
+                    controller.search(urlText.text, searchText.text, threadsText.value, maxPagesText.text)
+                    //console.log("prived")
+                }
             }
 
             Button {
@@ -121,15 +126,51 @@ Item {
                 id: stopButton
                 width: buttonWidth
                 text: qsTr("Stop")
+
+                onClicked: {
+                    controller.stop()
+                }
             }
         }
     }
 
-    ScrollView {
-        id: scrollViewResult
+    Rectangle {
         width: 400
         height: 800
         anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.topMargin: 20
+        anchors.leftMargin: 20
+
+    ScrollView {
+        anchors.fill: parent
+        width: 200
+        height: 200
+
+        ListView {
+            model: controller.searchResult
+            anchors.fill: parent
+            clip: true
+            delegate: Row {
+                Text {
+                    height: rowHeight
+                    topPadding: textTopPadding
+                    text: model.url
+                    width: 300
+                }
+                Text {
+                    height: rowHeight
+                    topPadding: textTopPadding
+                    text: model.searchResult
+                }
+            }
+
+            Component.onCompleted: {
+                console.log(controller.searchResult.rowCount())
+            }
+
+        }
+    }
     }
 }
 
