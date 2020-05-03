@@ -26,7 +26,7 @@ void Controller::start(const QString &url, const QString &search_string, qint32 
     set_status(STATUS_WORKING);
 
     max_urls_ = max_urls;
-    urls_queue.push(url.toStdString());
+    urls_queue.push(url);
 
     thread_pool_.setMaxThreadCount(max_threads);
     std::function<void(URL_SEARCH_RESUlT)> finish_cb = [this](URL_SEARCH_RESUlT retval) { on_thread_finished(retval); };

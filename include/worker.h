@@ -10,7 +10,7 @@
 class worker : public QRunnable
 {
 public:
-    worker(concurrent_queue<std::string> &urls_queue,
+    worker(concurrent_queue<QString> &urls_queue,
            QString keyword,
            std::atomic<int> &status,
            int depth,
@@ -22,10 +22,10 @@ protected:
 
 private:
     void add_urls_to_queue(const QString& pageHtml);
-    std::string process_page();
+    QString process_page();
 
-    concurrent_queue<std::string> &urls_queue_;
-    std::string url_;
+    concurrent_queue<QString> &urls_queue_;
+    QString url_;
     QString keyword_;
     std::atomic<int> &thread_status_;
     int search_depth{};

@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 
-worker::worker(concurrent_queue<std::string> &urls_queue,
+worker::worker(concurrent_queue<QString> &urls_queue,
                QString keyword,
                std::atomic<int> &status,
                int depth,
@@ -28,8 +28,8 @@ void worker::add_urls_to_queue(const QString& pageHtml) {
     }
 }
 
-std::string worker::process_page() {
-    std::string threadResult;
+QString worker::process_page() {
+    QString threadResult;
 
     try {
         QString page = downloader::download_page(url_);
@@ -37,7 +37,7 @@ std::string worker::process_page() {
         add_urls_to_queue(page);
     }
     catch(exception& ex) {
-        threadResult = errorPrefix + static_cast<std::string>(ex.what());
+        threadResult = errorPrefix + static_cast<QString>(ex.what());
     }
 
     return threadResult;
@@ -52,7 +52,7 @@ void worker::run() {
             if (!urls_queue_.try_and_pop(url_)) {
                 continue;
             } else {
-                std::string thread_result = process_page();
+                QString thread_result = process_page();
                 if (worker_callback_) {
                     worker_callback_({url_, thread_result, worker_id_});
                 }

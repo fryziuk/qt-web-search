@@ -10,9 +10,9 @@ QVariant web_search_result::data(const QModelIndex &index, int role) const {
     URL_SEARCH_RESUlT result = row_search_result.at(index.row());
     switch (role) {
         case Url:
-            return QVariant(QString::fromStdString(result.url));
+            return QVariant(result.url);
         case Status:
-            return QVariant(QString::fromStdString(result.status));
+            return QVariant(result.status);
     }
     return QVariant();
 }

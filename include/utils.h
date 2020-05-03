@@ -1,9 +1,9 @@
 #pragma once
-#include <string>
+#include <QString>
 
 struct URL_SEARCH_RESUlT{
-    std::string url;
-    std::string status;
+    QString url;
+    QString status;
     int index;
 };
 constexpr auto SLEEP_TIMEOUT = 2000;

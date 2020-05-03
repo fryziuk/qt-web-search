@@ -39,7 +39,7 @@ private:
     web_search_result *p_result_model;
 
     QThreadPool thread_pool_;
-    concurrent_queue<std::string> urls_queue;
+    concurrent_queue<QString> urls_queue;
 
     std::atomic<int> status_;
     int max_urls_{};
