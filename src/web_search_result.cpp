@@ -11,7 +11,6 @@ QVariant web_search_result::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     URL_SEARCH_RESUlT result = row_search_result.at(index.row());
-
     switch (role) {
         case Url:
             return QVariant(QString::fromStdString(result.url));

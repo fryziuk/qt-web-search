@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <regex>
+#include <profile.h>
 
 #include "worker.h"
 
@@ -24,6 +25,8 @@ worker::worker(concurrent_queue<std::string> &urls_queue,
 }
 
 void worker::add_urls_to_queue(QString pageHtml) {
+    LOG_DURATION("Add URLs to queue");
+
     std::string text = pageHtml.toStdString();
     const std::regex hl_regex("http[s]?:\\/\\/?[^\\s([\"<,>]*\\.[^\\s[\",><]*");
 
@@ -38,6 +41,7 @@ void worker::add_urls_to_queue(QString pageHtml) {
 }
 
 std::string worker::find_keyword(QString pageHtml) {
+    LOG_DURATION("Find keyword");
     if (pageHtml.contains(keyword_)) {
         return keyword_found;
     } else {
@@ -46,12 +50,18 @@ std::string worker::find_keyword(QString pageHtml) {
 }
 
 std::string worker::check_page() {
-    std::string threadResult = workingOnThatStatus;
+    LOG_DURATION("Download page");
+    std::string threadResult;
+
+    QTimer timer;
+    timer.setSingleShot(true);
 
     QNetworkAccessManager manager;
     QEventLoop event;
+    QObject::connect(&timer, SIGNAL(timeout()), &event, SLOT(quit()));
     QNetworkReply *response = manager.get(QNetworkRequest(QUrl(QString::fromStdString(url_))));
     QObject::connect(response, SIGNAL(finished()), &event, SLOT(quit()));
+    timer.start(2000);
     event.exec();
 
     if (response->error() == QNetworkReply::NoError) {

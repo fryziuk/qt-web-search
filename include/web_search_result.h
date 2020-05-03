@@ -12,7 +12,6 @@
 
 class web_search_result: public QAbstractListModel {
 Q_OBJECT
-
     enum {
         Url = Qt::UserRole,
         Status

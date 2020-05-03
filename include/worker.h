@@ -1,5 +1,4 @@
-#ifndef WORKTHREAD_H
-#define WORKTHREAD_H
+#pragma once
 
 #include <QRunnable>
 #include <QString>
@@ -20,8 +19,7 @@ public:
            std::atomic<int> &status,
            int depth,
            std::function<void(URL_SEARCH_RESUlT)> callback,
-           int index
-               );
+           int index);
 
 protected:
     void run();
@@ -41,5 +39,3 @@ private:
     std::function<void(URL_SEARCH_RESUlT)> worker_callbalk_;
 
 };
-
-#endif // WORKTHREAD_H

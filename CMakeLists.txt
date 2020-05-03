@@ -18,6 +18,7 @@ target_sources(qt-web-search
         ${CMAKE_CURRENT_LIST_DIR}/include/worker.h
         ${CMAKE_CURRENT_LIST_DIR}/include/concurrent_queue.h
         ${CMAKE_CURRENT_LIST_DIR}/include/utils.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/profile.h
 
         # sources
         ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
