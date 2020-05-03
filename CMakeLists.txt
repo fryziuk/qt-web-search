@@ -13,7 +13,7 @@ add_executable(qt-web-search)
 target_sources(qt-web-search
         PUBLIC
         # headers
-        ${CMAKE_CURRENT_LIST_DIR}/include/controller.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/Controller.h
         ${CMAKE_CURRENT_LIST_DIR}/include/web_search_result.h
         ${CMAKE_CURRENT_LIST_DIR}/include/worker.h
         ${CMAKE_CURRENT_LIST_DIR}/include/concurrent_queue.h
@@ -22,7 +22,7 @@ target_sources(qt-web-search
 
         # sources
         ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/src/controller.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/Controller.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/worker.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/web_search_result.cpp
 

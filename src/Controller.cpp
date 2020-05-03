@@ -1,4 +1,4 @@
-#include "controller.h"
+#include "Controller.h"
 #include "web_search_result.h"
 #include "worker.h"
 
@@ -8,40 +8,20 @@
 #include <QQuickView>
 #include <functional>
 
-controller::controller(QObject *parent)
-        : QObject(parent), p_ui_context_(nullptr), p_result_model(new web_search_result), url_index{0}, status_(STATUS_WORKING) {
+Controller::Controller(QObject *parent)
+        : QObject(parent), p_result_model(new web_search_result), status_(STATUS_WORKING), url_index{0} {
 
-    connect(this, &controller::insert_row, p_result_model, &web_search_result::insertRow, Qt::QueuedConnection);
-    connect(this, &controller::clear, p_result_model, &web_search_result::clear, Qt::QueuedConnection);
+    connect(this, &Controller::insert_row, p_result_model, &web_search_result::insertRow, Qt::QueuedConnection);
+    connect(this, &Controller::clear, p_result_model, &web_search_result::clear, Qt::QueuedConnection);
     connect(this, SIGNAL(update_status(int)),
                      SLOT(set_status(int)));
 }
 
-controller::~controller() {
+Controller::~Controller() {
     thread_pool_.waitForDone();
-    delete p_ui_context_;
 }
 
-
-void controller::setup_ui() {
-    p_ui_context_ = new QQuickView;
-    p_ui_context_->setTitle(QString("qt-web-search"));
-
-    qRegisterMetaType<web_search_result *>("web_search_result*");
-    qRegisterMetaType<URL_SEARCH_RESUlT>("URL_SEARCH_RESUlT");
-
-    QQmlContext *rootContext = p_ui_context_->rootContext();
-    rootContext->setContextProperty("controller", this);
-
-    QFont f = qApp->font();
-    f.setPixelSize(12);
-    qApp->setFont(f);
-    p_ui_context_->setResizeMode(QQuickView::SizeRootObjectToView);
-    p_ui_context_->setSource(QUrl("qrc:/main.qml"));
-    p_ui_context_->show();
-}
-
-void controller::start(const QString &url, const QString &search_string, qint32 max_threads, qint32 max_urls) {
+void Controller::start(const QString &url, const QString &search_string, qint32 max_threads, qint32 max_urls) {
     stop();
     set_status(STATUS_WORKING);
 
@@ -62,17 +42,17 @@ void controller::start(const QString &url, const QString &search_string, qint32 
     }
 }
 
-web_search_result *controller::getSearchResult() const {
+web_search_result *Controller::getSearchResult() const {
     return p_result_model;
 }
 
-void controller::stop() {
+void Controller::stop() {
     set_status(STATUS_STOPPED);
     emit update_status(STATUS_STOPPED);
 }
 
 
-void controller::on_thread_finished(URL_SEARCH_RESUlT url_status) {
+void Controller::on_thread_finished(URL_SEARCH_RESUlT url_status) {
     if (status_ == STATUS_WORKING) {
         emit insert_row(url_status);
         ++mAnalyzedUrlNum;
@@ -83,7 +63,7 @@ void controller::on_thread_finished(URL_SEARCH_RESUlT url_status) {
     }
 }
 
-void controller::set_status(int status) {
+void Controller::set_status(int status) {
     status_ = status;
     if (status_ == STATUS_WORKING) {
         emit clear();

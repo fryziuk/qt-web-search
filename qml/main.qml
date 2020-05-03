@@ -1,10 +1,20 @@
 import QtQuick 2.13
 import QtQuick.Controls  2.13
+import App.Controller 0.1
+import QtQuick.Window 2.13
 
-Item {
+
+ApplicationWindow {
     id: mainWindow
     width: 1000
     height: 800
+    visible: true
+    minimumWidth: 1000
+    minimumHeight: 800
+
+    Controller {
+        id: controller_id
+    }
 
     property int labelWidth: 90;
     property int textFieldWidth: 200
@@ -115,7 +125,7 @@ Item {
                 width: buttonWidth
                 text: qsTr("Start")
                 onClicked: {
-                    controller.start(urlText.text, searchText.text, threadsText.value, maxPagesText.text)
+                    controller_id.start(urlText.text, searchText.text, threadsText.value, maxPagesText.text)
                 }
             }
             Button {
@@ -124,7 +134,7 @@ Item {
                 text: qsTr("Stop")
 
                 onClicked: {
-                    controller.stop()
+                    controller_id.stop()
                 }
             }
         }
@@ -142,7 +152,7 @@ Item {
         anchors.fill: parent
 
         ListView {
-            model: controller.searchResult
+            model: controller_id.searchResult
             anchors.fill: parent
             clip: true
             delegate: Rectangle {

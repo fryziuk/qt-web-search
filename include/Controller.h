@@ -9,20 +9,18 @@
 
 class QQuickView;
 
-class controller : public QObject {
+class Controller : public QObject {
 Q_OBJECT
     Q_PROPERTY(web_search_result *searchResult READ getSearchResult NOTIFY searchResultChanged)
 
 public:
-    explicit controller(QObject *parent = nullptr);
+    explicit Controller(QObject *parent = nullptr);
 
     web_search_result *getSearchResult() const;
 
-    ~controller();
+    ~Controller();
 
     void on_thread_finished(URL_SEARCH_RESUlT url_status);
-
-    void setup_ui();
 
 signals:
 
@@ -43,7 +41,6 @@ public slots:
     void set_status(int status);
 
 private:
-    QQuickView *p_ui_context_;
     web_search_result *p_result_model;
 
     QThreadPool thread_pool_;
