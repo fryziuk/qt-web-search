@@ -14,7 +14,7 @@ Controller::Controller(QObject *parent)
     connect(this, &Controller::insert_row, p_result_model, &web_search_result::insertRow, Qt::QueuedConnection);
     connect(this, &Controller::clear, p_result_model, &web_search_result::clear, Qt::QueuedConnection);
     connect(this, SIGNAL(update_status(int)),
-                     SLOT(set_status(int)));
+                     SLOT(set_status(int)), Qt::QueuedConnection);
 }
 
 Controller::~Controller() {
@@ -48,7 +48,6 @@ web_search_result *Controller::getSearchResult() const {
 
 void Controller::stop() {
     set_status(STATUS_STOPPED);
-    emit update_status(STATUS_STOPPED);
 }
 
 
@@ -71,5 +70,6 @@ void Controller::set_status(int status) {
         thread_pool_.waitForDone();
         urls_queue.clear();
         mAnalyzedUrlNum = 0;
+        url_index = 0;
     }
 }

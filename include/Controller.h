@@ -7,8 +7,6 @@
 #include <QObject>
 #include <QThreadPool>
 
-class QQuickView;
-
 class Controller : public QObject {
 Q_OBJECT
     Q_PROPERTY(web_search_result *searchResult READ getSearchResult NOTIFY searchResultChanged)
@@ -25,11 +23,8 @@ public:
 signals:
 
     void searchResultChanged();
-
     void insert_row(URL_SEARCH_RESUlT search_result);
-
     void update_status(int status);
-
     void clear();
 
 public slots:

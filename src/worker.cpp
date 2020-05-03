@@ -35,7 +35,7 @@ void worker::add_urls_to_queue(const QString& pageHtml) {
     }
 }
 
-std::string worker::find_keyword(const QString& pageHtml, const QString& keyword) {
+std::string worker::find_keyword(const QString& pageHtml, const QString& keyword) const {
     LOG_DURATION("Find keyword");
     if (pageHtml.contains(keyword)) {
         return keyword_found;
@@ -43,6 +43,21 @@ std::string worker::find_keyword(const QString& pageHtml, const QString& keyword
         return keyword_not_found;
     }
 }
+
+QNetworkReply* worker::download_page() const {
+    QTimer timer;
+    timer.setSingleShot(true);
+
+    QNetworkAccessManager manager;
+    QEventLoop event;
+    QObject::connect(&timer, SIGNAL(timeout()), &event, SLOT(quit()));
+    QNetworkReply *response = manager.get(QNetworkRequest(QUrl(QString::fromStdString(url_))));
+    QObject::connect(response, SIGNAL(finished()), &event, SLOT(quit()));
+    timer.start(SLEEP_TIMEOUT);
+    event.exec();
+    return response;
+}
+
 
 std::string worker::check_page() {
     LOG_DURATION("Download page");

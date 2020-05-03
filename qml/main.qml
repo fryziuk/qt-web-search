@@ -9,8 +9,8 @@ ApplicationWindow {
     width: 1000
     height: 800
     visible: true
-    minimumWidth: 1000
-    minimumHeight: 800
+    minimumWidth: 800
+    minimumHeight: 600
 
     Controller {
         id: controller_id
@@ -90,7 +90,7 @@ ApplicationWindow {
                 selectByMouse: true
                 validator: IntValidator {bottom: 1; top: 1000}
                 placeholderText: qsTr("100")
-                text: "15"
+                text: "30"
             }
         }
 

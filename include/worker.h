@@ -2,12 +2,14 @@
 
 #include <QRunnable>
 #include <QString>
+#include <QNetworkReply>
 
 #include <atomic>
 #include <set>
 
 #include "concurrent_queue.h"
 #include "utils.h"
+
 
 class worker : public QRunnable
 {
@@ -24,8 +26,10 @@ protected:
 
 private:
     void add_urls_to_queue(const QString& pageHtml);
-    std::string find_keyword(const QString& pageHtml, const QString& keyword);
+    std::string find_keyword(const QString& pageHtml, const QString& keyword) const;
+
     std::string check_page();
+    QNetworkReply* download_page() const;
 
     concurrent_queue<std::string> &urls_queue_;
     std::string url_;
