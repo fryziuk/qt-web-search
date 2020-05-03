@@ -1,3 +1,5 @@
+// Simple profile lib
+
 #pragma once
 
 #include <chrono>

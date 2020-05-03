@@ -6,7 +6,20 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(CMAKE_CXX_STANDARD 17)
+
 find_package(Qt5 COMPONENTS Quick Core Network QuickControls2 REQUIRED)
+
+# Interface library created for unit tests usage
+add_library(url_utils INTERFACE)
+target_sources(url_utils INTERFACE
+        ${CMAKE_CURRENT_LIST_DIR}/include/url_utils/url_searcher.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/url_utils/downloader.h
+        )
+target_include_directories(url_utils
+        INTERFACE
+        include/url_utils/)
+
 
 add_executable(qt-web-search)
 
@@ -19,8 +32,6 @@ target_sources(qt-web-search
         ${CMAKE_CURRENT_LIST_DIR}/include/concurrent_queue.h
         ${CMAKE_CURRENT_LIST_DIR}/include/utils.h
         ${CMAKE_CURRENT_LIST_DIR}/include/profile.h
-        ${CMAKE_CURRENT_LIST_DIR}/include/downloader.h
-        ${CMAKE_CURRENT_LIST_DIR}/include/url_searcher.h
 
         # Sources
         ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
@@ -41,6 +52,8 @@ target_include_directories(qt-web-search
 
 
 target_link_libraries(qt-web-search
+        PUBLIC
+        url_utils
         PRIVATE
         Qt5::Core
         Qt5::Quick
@@ -48,6 +61,10 @@ target_link_libraries(qt-web-search
         Qt5::QuickControls2
         Qt5::Network
         )
+
+
+add_subdirectory(test)
+
 
 #target_compile_options(qt-web-search
 #        PUBLIC
