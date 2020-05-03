@@ -20,12 +20,10 @@ worker::worker(concurrent_queue<std::string> &urls_queue,
         thread_status(status),
         search_depth(depth),
         worker_callbalk_(callback),
-        worker_id_(workerId)
-{
+        worker_id_(workerId) {
 }
 
-void worker::add_urls_to_queue(QString pageHtml)
-{
+void worker::add_urls_to_queue(QString pageHtml) {
     std::string text = pageHtml.toStdString();
     const std::regex hl_regex("http[s]?:\\/\\/?[^\\s([\"<,>]*\\.[^\\s[\",><]*");
 
@@ -39,8 +37,7 @@ void worker::add_urls_to_queue(QString pageHtml)
     }
 }
 
-std::string worker::find_keyword(QString pageHtml)
-{
+std::string worker::find_keyword(QString pageHtml) {
     if (pageHtml.contains(keyword_)) {
         return keyword_found;
     } else {
@@ -48,43 +45,40 @@ std::string worker::find_keyword(QString pageHtml)
     }
 }
 
-void worker::run()
-{
-    while (1) {
-        if (thread_status == STATUS_PAUSED) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIMEOUT));
-        } else
+std::string worker::check_page() {
+    std::string threadResult = workingOnThatStatus;
+
+    QNetworkAccessManager manager;
+    QEventLoop event;
+    QNetworkReply *response = manager.get(QNetworkRequest(QUrl(QString::fromStdString(url_))));
+    QObject::connect(response, SIGNAL(finished()), &event, SLOT(quit()));
+    event.exec();
+
+    if (response->error() == QNetworkReply::NoError) {
+        QString page = response->readAll();
+        threadResult = find_keyword(page);
+        add_urls_to_queue(page);
+    } else {
+        threadResult = errorPrefix + response->errorString().toStdString();
+    }
+    response->deleteLater();
+    return threadResult;
+}
+
+void worker::run() {
+    while (true) {
         if (thread_status == STATUS_STOPPED ||
             current_search_depth == search_depth) {
             return;
-        } else
-        if (thread_status == STATUS_WORKING) {
+        } else if (thread_status == STATUS_WORKING) {
             if (!urls_queue_.try_and_pop(url_)) {
                 continue;
             } else {
-                std::string threadResult = workingOnThatStatus;
-
-                QNetworkAccessManager manager;
-                QEventLoop event;
-                QNetworkReply *response = manager.get(QNetworkRequest(QUrl(QString::fromStdString(url_))));
-                QObject::connect(response, SIGNAL(finished()), &event, SLOT(quit()));
-                event.exec();
-
-                if (response->error() == QNetworkReply::NoError) {
-                    QString page = response->readAll();
-                    threadResult = find_keyword(page);
-                    add_urls_to_queue(page);
-                } else {
-                    threadResult = errorPrefix + response->errorString().toStdString();
-                }
-
+                std::string thread_result = check_page();
                 if (worker_callbalk_) {
-                    worker_callbalk_({url_, threadResult, worker_id_});
+                    worker_callbalk_({url_, thread_result, worker_id_});
                 }
-
                 ++current_search_depth;
-
-                response->deleteLater();
             }
         }
     }

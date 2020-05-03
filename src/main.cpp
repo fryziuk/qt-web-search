@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
     QGuiApplication application(argc, argv);
 
     controller controller;
-    controller.setupUI();
+    controller.setup_ui();
 
     return application.exec();
 }

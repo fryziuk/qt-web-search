@@ -15,16 +15,16 @@ namespace {
 }
 
 controller::controller(QObject *parent)
-        : QObject(parent), p_ui_context_(nullptr), p_result_model(new web_search_result), url_index{0}{
+        : QObject(parent), p_ui_context_(nullptr), p_result_model(new web_search_result), url_index{0} {
 
-    connect(this, &controller::insertRow, p_result_model, &web_search_result::insertRow);
-    connect(this, &controller::clear, p_result_model, &web_search_result::clear);
+    connect(this, &controller::insert_row, p_result_model, &web_search_result::insertRow, Qt::QueuedConnection);
+    connect(this, &controller::clear, p_result_model, &web_search_result::clear, Qt::QueuedConnection);
     timer = new QTimer(this);
     timer->setInterval(CONNECTION_TIMEOUT);
     mCrawlStatus = STATUS_WORKING;
     thread_pool.waitForDone();
-    QObject::connect(this, SIGNAL(updateStatus(int)),
-                     SLOT(setStatus(int)));
+    QObject::connect(this, SIGNAL(update_status(int)),
+                     SLOT(set_status(int)));
     url_index = 0;
 }
 
@@ -34,16 +34,15 @@ controller::~controller() {
 }
 
 
-void controller::setupUI() {
+void controller::setup_ui() {
     p_ui_context_ = new QQuickView;
     p_ui_context_->setTitle(QString("qt-web-search"));
 
-    qRegisterMetaType<web_search_result*>("web_search_result*");
+    qRegisterMetaType<web_search_result *>("web_search_result*");
     qRegisterMetaType<URL_SEARCH_RESUlT>("URL_SEARCH_RESUlT");
 
     QQmlContext *rootContext = p_ui_context_->rootContext();
     rootContext->setContextProperty("controller", this);
-
 
 
     QFont f = qApp->font();
@@ -55,7 +54,9 @@ void controller::setupUI() {
     p_ui_context_->show();
 }
 
-void controller::search(const QString& url, const QString& search_string, qint32 threadNum, qint32 pages) {
+void controller::start(const QString &url, const QString &search_string, qint32 threadNum, qint32 pages) {
+
+    set_status(STATUS_WORKING);
     qDebug() << url << " " << search_string << " " << threadNum << pages;
 
 
@@ -64,7 +65,7 @@ void controller::search(const QString& url, const QString& search_string, qint32
     thread_pool.setMaxThreadCount(threadNum);
     keyword_ = search_string;
     threads_num_ = threadNum;
-    std::function<void(URL_SEARCH_RESUlT)> finish_cb = [this](URL_SEARCH_RESUlT retval) {onThreadFinished(retval);};
+    std::function<void(URL_SEARCH_RESUlT)> finish_cb = [this](URL_SEARCH_RESUlT retval) { on_thread_finished(retval); };
     threads_num_ = threadNum;
     search_depth_ = pages;
 
@@ -88,45 +89,38 @@ void controller::search(const QString& url, const QString& search_string, qint32
     //thread_pool.waitForDone(1000);
 }
 
-web_search_result* controller::getSearchResult() const {
+web_search_result *controller::getSearchResult() const {
     return p_result_model;
 }
 
 void controller::stop() {
-    emit updateStatus(STATUS_STOPPED);
-    //p_result_model->clear();
+    set_status(STATUS_STOPPED);
+    emit update_status(STATUS_STOPPED);
 }
 
 
-void controller::onThreadFinished(URL_SEARCH_RESUlT url_status)
-{
+void controller::on_thread_finished(URL_SEARCH_RESUlT url_status) {
     if (mCrawlStatus == STATUS_WORKING) {
-        std::lock_guard<std::mutex>lock(callback_mutex);
+        //std::lock_guard<std::mutex>lock(callback_mutex);
 
-        emit insertRow(url_status);
-
+        emit insert_row(url_status);
 
         ++mAnalyzedUrlNum;
 
         if (mAnalyzedUrlNum == max_urls_) {
-            emit updateStatus(STATUS_STOPPED);
+            emit update_status(STATUS_STOPPED);
         }
     }
 }
 
-void controller::setStatus(int status) {
+void controller::set_status(int status) {
     mCrawlStatus = status;
     if (mCrawlStatus == STATUS_WORKING) {
         emit clear();
-    } else
-    if (mCrawlStatus == STATUS_PAUSED) {
-        //
-    } else
-    if (mCrawlStatus == STATUS_STOPPED) {
+    } else if (mCrawlStatus == STATUS_STOPPED) {
         thread_pool.waitForDone();
         urls_queue.clear();
         mAnalyzedUrlNum = 0;
-        //
     }
 }
 

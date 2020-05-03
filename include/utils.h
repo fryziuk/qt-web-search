@@ -23,7 +23,6 @@ constexpr auto keyword_not_found = "not found";
 constexpr auto workingOnThatStatus = "analyzing";
 constexpr auto errorPrefix= "error: ";
 constexpr auto STATUS_WORKING = 0;
-constexpr auto STATUS_PAUSED = 1;
 constexpr auto STATUS_STOPPED = 2;
 
 #endif //QT_WEB_SEARCH_UTILS_H

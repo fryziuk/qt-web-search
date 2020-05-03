@@ -1,18 +1,18 @@
 #ifndef QT_WEB_SEARCH_CONTROLLER_H
 #define QT_WEB_SEARCH_CONTROLLER_H
 
+#include "concurrent_queue.h"
+#include "utils.h"
+#include "web_search_result.h"
+
+#include <QDebug>
 #include <QObject>
+#include <QThreadPool>
+#include <QUrl>
+#include <Qlist>
 #include <QtCore/QList>
 #include <QtQml/QQmlListProperty>
-#include <Qlist>
-#include <QDebug>
-#include <QUrl>
-#include <QThreadPool>
 #include <Qtimer>
-#include "concurrent_queue.h"
-
-#include "web_search_result.h"
-#include "utils.h"
 #include <unordered_set>
 
 class QQuickView;
@@ -29,23 +29,22 @@ public:
 
     ~controller();
 
-    void onThreadFinished(URL_SEARCH_RESUlT url_status);
+    void on_thread_finished(URL_SEARCH_RESUlT url_status);
 
-    void setupUI();
+    void setup_ui();
 
     signals:
     void searchResultChanged();
-    void insertRow(URL_SEARCH_RESUlT search_result);
-    bool updateData(URL_SEARCH_RESUlT search_result);
-    void updateStatus(int status);
+    void insert_row(URL_SEARCH_RESUlT search_result);
+    void update_status(int status);
     void clear();
 
 
 
 public slots:
-    void search(const QString& url, const QString& search_string, qint32 thread, qint32 pages);
+    void start(const QString& url, const QString& search_string, qint32 thread, qint32 pages);
     void stop();
-    void setStatus(int status);
+    void set_status(int status);
 
 
 private:

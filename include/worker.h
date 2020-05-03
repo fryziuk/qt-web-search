@@ -29,6 +29,7 @@ protected:
 private:
     void add_urls_to_queue(QString pageHtml);
     std::string find_keyword(QString pageHtml);
+    std::string check_page();
 
     concurrent_queue<std::string> &urls_queue_;
     std::string url_;

@@ -25,7 +25,7 @@ QVariant web_search_result::data(const QModelIndex &index, int role) const {
 QHash<int, QByteArray> web_search_result::roleNames() const {
     QHash<int, QByteArray> names;
     names[Url] = "url";
-    names[Status] = "p_result_model";
+    names[Status] = "searchResult";
     return names;
 }
 
@@ -40,7 +40,7 @@ bool web_search_result::insertRow(URL_SEARCH_RESUlT search_result) {
 
 
 void web_search_result::clear() {
-    beginRemoveRows(QModelIndex(), 0, row_search_result.size());
+    beginRemoveRows(QModelIndex(), 0, current_index);
     row_search_result.clear();
     current_index = 0;
     endRemoveRows();
