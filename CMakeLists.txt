@@ -19,12 +19,16 @@ target_sources(qt-web-search
         ${CMAKE_CURRENT_LIST_DIR}/include/concurrent_queue.h
         ${CMAKE_CURRENT_LIST_DIR}/include/utils.h
         ${CMAKE_CURRENT_LIST_DIR}/include/profile.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/downloader.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/url_searcher.h
 
         # Sources
         ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/Controller.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/worker.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/web_search_result.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/downloader.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/url_searcher.cpp
 
         # Resources
         ${CMAKE_CURRENT_LIST_DIR}/qml/resources.qrc

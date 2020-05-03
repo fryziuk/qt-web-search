@@ -1,13 +1,11 @@
 #include "profile.h"
 #include "worker.h"
+#include "utils.h"
+#include "downloader.h"
+#include "url_searcher.h"
 
-#include <QtNetwork>
-#include <QRegExp>
+#include <stdexcept>
 
-constexpr auto SLEEP_TIMEOUT = 2000;
-constexpr auto keyword_found = "Found";
-constexpr auto keyword_not_found = "Not found";
-constexpr auto errorPrefix= "error: ";
 
 worker::worker(concurrent_queue<std::string> &urls_queue,
                QString keyword,
@@ -24,64 +22,24 @@ worker::worker(concurrent_queue<std::string> &urls_queue,
 }
 
 void worker::add_urls_to_queue(const QString& pageHtml) {
-    LOG_DURATION("Add URLs to queue");
-    QRegularExpression url_reg_exp("http[s]?:\\/\\/?[^\\s([\"<,>]*\\.[^\\s[\",><]*");
-    QRegularExpressionMatchIterator i = url_reg_exp.globalMatch(pageHtml);
-    while (i.hasNext()) {
-        QRegularExpressionMatch match = i.next();
-        if (match.hasMatch()) {
-            urls_queue_.push( match.captured(0).toStdString());
-        }
+    auto result = url_searcher::get_urls_from_page(pageHtml);
+    for(const auto& val : result) {
+        urls_queue_.push(val);
     }
 }
 
-std::string worker::find_keyword(const QString& pageHtml, const QString& keyword) const {
-    LOG_DURATION("Find keyword");
-    if (pageHtml.contains(keyword)) {
-        return keyword_found;
-    } else {
-        return keyword_not_found;
-    }
-}
-
-QNetworkReply* worker::download_page() const {
-    QTimer timer;
-    timer.setSingleShot(true);
-
-    QNetworkAccessManager manager;
-    QEventLoop event;
-    QObject::connect(&timer, SIGNAL(timeout()), &event, SLOT(quit()));
-    QNetworkReply *response = manager.get(QNetworkRequest(QUrl(QString::fromStdString(url_))));
-    QObject::connect(response, SIGNAL(finished()), &event, SLOT(quit()));
-    timer.start(SLEEP_TIMEOUT);
-    event.exec();
-    return response;
-}
-
-
-std::string worker::check_page() {
-    LOG_DURATION("Download page");
+std::string worker::process_page() {
     std::string threadResult;
 
-    QTimer timer;
-    timer.setSingleShot(true);
-
-    QNetworkAccessManager manager;
-    QEventLoop event;
-    QObject::connect(&timer, SIGNAL(timeout()), &event, SLOT(quit()));
-    QNetworkReply *response = manager.get(QNetworkRequest(QUrl(QString::fromStdString(url_))));
-    QObject::connect(response, SIGNAL(finished()), &event, SLOT(quit()));
-    timer.start(SLEEP_TIMEOUT);
-    event.exec();
-
-    if (response->error() == QNetworkReply::NoError) {
-        QString page = response->readAll();
-        threadResult = find_keyword(page, keyword_);
+    try {
+        QString page = downloader::download_page(url_);
+        threadResult = url_searcher::find_keyword(page, keyword_);
         add_urls_to_queue(page);
-    } else {
-        threadResult = errorPrefix + response->errorString().toStdString();
     }
-    response->deleteLater();
+    catch(exception& ex) {
+        threadResult = errorPrefix + static_cast<std::string>(ex.what());
+    }
+
     return threadResult;
 }
 
@@ -94,7 +52,7 @@ void worker::run() {
             if (!urls_queue_.try_and_pop(url_)) {
                 continue;
             } else {
-                std::string thread_result = check_page();
+                std::string thread_result = process_page();
                 if (worker_callback_) {
                     worker_callback_({url_, thread_result, worker_id_});
                 }
