@@ -9,8 +9,6 @@
 #include "concurrent_queue.h"
 #include "utils.h"
 
-class QNetworkReply;
-
 class worker : public QRunnable
 {
 public:
@@ -25,17 +23,16 @@ protected:
     void run();
 
 private:
-    void add_urls_to_queue(QString pageHtml);
-    std::string find_keyword(QString pageHtml);
+    void add_urls_to_queue(const QString& pageHtml);
+    std::string find_keyword(const QString& pageHtml, const QString& keyword);
     std::string check_page();
 
     concurrent_queue<std::string> &urls_queue_;
     std::string url_;
     QString keyword_;
-    std::atomic<int> &thread_status;
+    std::atomic<int> &thread_status_;
     int search_depth{};
     int current_search_depth{};
     int worker_id_;
-    std::function<void(URL_SEARCH_RESUlT)> worker_callbalk_;
-
+    std::function<void(URL_SEARCH_RESUlT)> worker_callback_;
 };

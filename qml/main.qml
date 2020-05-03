@@ -29,13 +29,13 @@ Item {
                 height: rowHeight
                 topPadding: textTopPadding
                 anchors.top: parent.top
-                text: qsTr("URL")
+                text: qsTr("URL:")
             }
 
             TextField {
                 id: urlText
                 width: textFieldWidth
-                text: "https://ru.wikipedia.org/wiki/C%2B%2B"
+                text: "https://en.wikipedia.org/wiki/C%2B%2B"
                 height: rowHeight
                 selectByMouse: true
                 validator: RegExpValidator { regExp: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/ }
@@ -102,7 +102,7 @@ Item {
                 height: rowHeight
                 selectByMouse: true
                 placeholderText: qsTr("C++")
-                text: "class"
+                text: "Stroustrup"
             }
         }
 
@@ -141,7 +141,6 @@ Item {
     ScrollView {
         anchors.fill: parent
 
-
         ListView {
             model: controller.searchResult
             anchors.fill: parent
@@ -150,7 +149,7 @@ Item {
                     width: 3 * textFieldWidth;
                     height: rowHeight
                     color: index % 2 == 0 ? "white" : "#d3d3d3"
-                    border.color: "grey"
+                    border.color: "#d3d3d3"
 
                     Row {
                         spacing: 1
@@ -161,7 +160,7 @@ Item {
                         }
 
                         TextArea {
-                            text: model.searchResult
+                            text: model.status
                             width: textFieldWidth;
                             height: rowHeight
                         }

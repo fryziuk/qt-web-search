@@ -1,8 +1,5 @@
 #include "web_search_result.h"
 
-web_search_result::web_search_result() {
-}
-
 int web_search_result::rowCount(const QModelIndex &parent) const {
     return row_search_result.size();
 }
@@ -17,14 +14,12 @@ QVariant web_search_result::data(const QModelIndex &index, int role) const {
         case Status:
             return QVariant(QString::fromStdString(result.status));
     }
-
     return QVariant();
-
 }
 QHash<int, QByteArray> web_search_result::roleNames() const {
     QHash<int, QByteArray> names;
     names[Url] = "url";
-    names[Status] = "searchResult";
+    names[Status] = "status";
     return names;
 }
 
