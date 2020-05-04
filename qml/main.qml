@@ -138,6 +138,16 @@ ApplicationWindow {
                 }
             }
         }
+
+        ProgressBar {
+            id: progressBar
+            from: 0
+            to: maxPagesText.text
+            width: 300
+
+            value: controller_id.progressBar
+        }
+
     }
 
     Rectangle {

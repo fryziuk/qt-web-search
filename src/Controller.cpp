@@ -55,6 +55,7 @@ void Controller::on_thread_finished(URL_SEARCH_RESUlT url_status) {
     if (status_ == STATUS_WORKING) {
         emit insert_row(url_status);
         ++mAnalyzedUrlNum;
+        emit progressBarChanged();
 
         if (mAnalyzedUrlNum == max_urls_) {
             emit update_status(STATUS_STOPPED);
@@ -66,10 +67,15 @@ void Controller::set_status(int status) {
     status_ = status;
     if (status_ == STATUS_WORKING) {
         emit clear();
+        emit progressBarChanged();
     } else if (status_ == STATUS_STOPPED) {
         thread_pool_.waitForDone();
         urls_queue.clear();
         mAnalyzedUrlNum = 0;
         url_index = 0;
     }
+}
+
+int Controller::progressBar() const {
+    return mAnalyzedUrlNum;
 }

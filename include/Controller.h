@@ -10,11 +10,13 @@
 class Controller : public QObject {
 Q_OBJECT
     Q_PROPERTY(web_search_result *searchResult READ getSearchResult NOTIFY searchResultChanged)
+    Q_PROPERTY(int progressBar READ progressBar NOTIFY progressBarChanged)
 
 public:
     explicit Controller(QObject *parent = nullptr);
 
     web_search_result *getSearchResult() const;
+    int progressBar() const;
 
     ~Controller();
 
@@ -26,6 +28,7 @@ signals:
     void insert_row(URL_SEARCH_RESUlT search_result);
     void update_status(int status);
     void clear();
+    void progressBarChanged();
 
 public slots:
 
