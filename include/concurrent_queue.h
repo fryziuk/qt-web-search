@@ -30,6 +30,19 @@ public:
         data_cond_.notify_one();
     }
 
+    void push(std::vector<T> items) {
+        {
+            std::lock_guard<std::mutex> lock(m_);
+            for (auto& item : items) {
+                if (set_.find(item) == set_.end()) {
+                    queue_.push(std::move(item));
+                    set_.emplace(queue_.back());
+                }
+            }
+        }
+        data_cond_.notify_one();
+    }
+
     bool try_and_pop(T &popped_item) {
         std::lock_guard<std::mutex> lock(m_);
         if (queue_.empty()) {

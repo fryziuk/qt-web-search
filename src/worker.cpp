@@ -22,10 +22,7 @@ worker::worker(concurrent_queue<QString> &urls_queue,
 }
 
 void worker::add_urls_to_queue(const QString& pageHtml) {
-    auto result = url_searcher::get_urls_from_page(pageHtml);
-    for(const auto& val : result) {
-        urls_queue_.push(val);
-    }
+    urls_queue_.push(url_searcher::get_urls_from_page(pageHtml));
 }
 
 QString worker::process_page() {
