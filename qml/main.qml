@@ -1,8 +1,7 @@
 import QtQuick 2.13
-import QtQuick.Controls  2.13
+import QtQuick.Controls 2.13
 import App.Controller 0.1
 import QtQuick.Window 2.13
-
 
 ApplicationWindow {
     id: mainWindow
@@ -16,16 +15,17 @@ ApplicationWindow {
         id: controller_id
     }
 
-    property int labelWidth: 90;
+    property int labelWidth: 90
     property int textFieldWidth: 200
     property int rowHeight: 50
     property int textTopPadding: 20
     property int parentPadding: 20
     property int buttonWidth: 90
+    property int spacingSize: 10
 
     Column {
         id: column
-        spacing: 10
+        spacing: spacingSize
         topPadding: parentPadding
         leftPadding: parentPadding
 
@@ -48,7 +48,9 @@ ApplicationWindow {
                 text: "https://en.wikipedia.org/wiki/C%2B%2B"
                 height: rowHeight
                 selectByMouse: true
-                validator: RegExpValidator { regExp: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/ }
+                validator: RegExpValidator {
+                    regExp: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/
+                }
                 placeholderText: qsTr("https://en.cppreference.com/w/")
             }
         }
@@ -66,7 +68,7 @@ ApplicationWindow {
 
             SpinBox {
                 id: threadsText
-                width: textFieldWidth;
+                width: textFieldWidth
                 height: rowHeight
                 value: 4
             }
@@ -85,10 +87,13 @@ ApplicationWindow {
 
             TextField {
                 id: maxPagesText
-                width: textFieldWidth;
+                width: textFieldWidth
                 height: rowHeight
                 selectByMouse: true
-                validator: IntValidator {bottom: 1; top: 1000}
+                validator: IntValidator {
+                    bottom: 1
+                    top: 1000
+                }
                 placeholderText: qsTr("100")
                 text: "30"
             }
@@ -103,12 +108,11 @@ ApplicationWindow {
                 topPadding: textTopPadding
                 anchors.top: parent.top
                 text: qsTr("Search string:")
-
             }
 
             TextField {
                 id: searchText
-                width: textFieldWidth;
+                width: textFieldWidth
                 height: rowHeight
                 selectByMouse: true
                 placeholderText: qsTr("C++")
@@ -117,7 +121,7 @@ ApplicationWindow {
         }
 
         Row {
-            spacing: 10
+            spacing: spacingSize
             height: rowHeight
 
             Button {
@@ -125,7 +129,8 @@ ApplicationWindow {
                 width: buttonWidth
                 text: qsTr("Start")
                 onClicked: {
-                    controller_id.start(urlText.text, searchText.text, threadsText.value, maxPagesText.text)
+                    controller_id.start(urlText.text, searchText.text,
+                                        threadsText.value, maxPagesText.text)
                 }
             }
             Button {
@@ -147,26 +152,25 @@ ApplicationWindow {
 
             value: controller_id.progressBar
         }
-
     }
 
     Rectangle {
-        width: 3 * textFieldWidth;
+        width: 3 * textFieldWidth
         height: 800
         anchors.left: column.right
         anchors.top: parent.top
         anchors.topMargin: 20
         anchors.leftMargin: 20
 
-    ScrollView {
-        anchors.fill: parent
-
-        ListView {
-            model: controller_id.searchResult
+        ScrollView {
             anchors.fill: parent
-            clip: true
-            delegate: Rectangle {
-                    width: 3 * textFieldWidth;
+
+            ListView {
+                model: controller_id.searchResult
+                anchors.fill: parent
+                clip: true
+                delegate: Rectangle {
+                    width: 3 * textFieldWidth
                     height: rowHeight
                     color: index % 2 == 0 ? "white" : "#d3d3d3"
                     border.color: "#d3d3d3"
@@ -175,13 +179,13 @@ ApplicationWindow {
                         spacing: 1
                         TextArea {
                             text: model.url
-                            width: 2 * textFieldWidth;
+                            width: 2 * textFieldWidth
                             height: rowHeight
                         }
 
                         TextArea {
                             text: model.status
-                            width: textFieldWidth;
+                            width: textFieldWidth
                             height: rowHeight
                         }
                     }
@@ -190,4 +194,3 @@ ApplicationWindow {
         }
     }
 }
-
