@@ -7,7 +7,7 @@
 constexpr auto SLEEP_TIMEOUT = 2000;
 
 QString downloader::download_page(const QString& url) {
-    LOG_DURATION("Download page");
+    //LOG_DURATION("Download page");
     QTimer timer;
     timer.setSingleShot(true);
 

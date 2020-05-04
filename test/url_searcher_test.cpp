@@ -2,22 +2,98 @@
 #define CATCH_CONFIG_MAIN
 #include "catch2.hpp"
 #include "url_searcher.h"
-//
-//void test_web_page_search_algo() {
-//    QString page = "A b A";
-//    QString needle = "b";
-//    auto res = url_searcher::find_keyword(page, needle);
-//}
 
+static constexpr auto keyword_found = "Found";
+static constexpr auto keyword_not_found = "Not found";
 
+TEST_CASE( "Basic search test", "[find_keyword]" ) {
+    {
+        QString page = "A b A";
+        QString needle = "b";
+        auto res = url_searcher::find_keyword(page, needle);
+        REQUIRE(res == keyword_found);
+    }
+    {
+        QString page = "A b A";
+        QString needle = "c";
+        auto res = url_searcher::find_keyword(page, needle);
+        REQUIRE(res == keyword_not_found);
+    }
 
-unsigned int Factorial( unsigned int number ) {
-    return number <= 1 ? number : Factorial(number-1)*number;
+    {
+        QString page = "A b A";
+        QString needle = "ba";
+        auto res = url_searcher::find_keyword(page, needle);
+        REQUIRE(res == keyword_not_found);
+    }
 }
 
-TEST_CASE( "Factorials are computed", "[factorial]" ) {
-    REQUIRE( Factorial(1) == 1 );
-    REQUIRE( Factorial(2) == 2 );
-    REQUIRE( Factorial(3) == 6 );
-    REQUIRE( Factorial(10) == 3628800 );
+TEST_CASE( "Html search test", "[find_keyword]" ) {
+    QString page = "<!DOCTYPE html>\n"
+                   "<html>\n"
+                   "<body>\n"
+                   "\n"
+                   "<h1>My First Heading</h1>\n"
+                   "\n"
+                   "<p>My first paragraph.</p>\n"
+                   "\n"
+                   "</body>\n"
+                   "</html>\n"
+                   "";
+    {
+
+        QString needle = "first";
+        auto res = url_searcher::find_keyword(page, needle);
+        REQUIRE(res == keyword_found);
+    }
+    {
+        QString needle = "firstt";
+        auto res = url_searcher::find_keyword(page, needle);
+        REQUIRE(res == keyword_not_found);
+    }
 }
+TEST_CASE( "Html search URLS no URLS", "[get_urls_from_page]" ) {
+    QString page = "<!DOCTYPE html>\n"
+                   "<html>\n"
+                   "<body>\n"
+                   "\n"
+                   "<h1>My First Heading</h1>\n"
+                   "\n"
+                   "<p>My first http paragraph.</p>\n"
+                   "\n"
+                   "</body>\n"
+                   "</html>\n"
+                   "";
+    {
+        auto res = url_searcher::get_urls_from_page(page);
+        REQUIRE(res.size() == 0);
+    }
+}
+
+
+// Probably not good idea to add this one to unittest
+TEST_CASE( "Html search URLS", "[get_urls_from_page]" ) {
+    QString page = "<!DOCTYPE html>\n"
+                   "<html>\n"
+                   "<body>\n"
+                   "<a href=\"https://www.w3schools.com\">Visit W3Schools.com!</a>\n"
+                   "<a href=\"https://www.google.com\">google</a>\n"
+                   "<a href=\"https://www.facebook.com\">facebook</a>\n"
+                   "\n"
+                   "<h1>My First Heading</h1>\n"
+                   "\n"
+                   "<p>My first paragraph.</p>\n"
+                   "\n"
+                   "</body>\n"
+                   "</html>\n"
+                   "";
+    {
+        auto res = url_searcher::get_urls_from_page(page);
+        REQUIRE(res.size() == 3);
+        REQUIRE(res[0] == "https://www.w3schools.com");
+        REQUIRE(res[1] == "https://www.google.com");
+        REQUIRE(res[2] == "https://www.facebook.com");
+    }
+}
+
+

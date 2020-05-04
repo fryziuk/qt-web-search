@@ -7,7 +7,7 @@ static constexpr auto keyword_found = "Found";
 static constexpr auto keyword_not_found = "Not found";
 
 QString url_searcher::find_keyword(const QString& pageHtml, const QString& keyword) {
-    LOG_DURATION("Find keyword");
+    //LOG_DURATION("Find keyword");
     if (pageHtml.contains(keyword)) {
         return keyword_found;
     } else {

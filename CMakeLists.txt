@@ -26,12 +26,14 @@ target_sources(qt-web-search
         ${CMAKE_CURRENT_LIST_DIR}/include/worker.h
         ${CMAKE_CURRENT_LIST_DIR}/include/concurrent_queue.h
         ${CMAKE_CURRENT_LIST_DIR}/include/utils.h
+        ${CMAKE_CURRENT_LIST_DIR}/include/downloader.h
 
         # Sources
         ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/Controller.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/worker.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/web_search_result.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/downloader.cpp
 
         # Resources
         ${CMAKE_CURRENT_LIST_DIR}/qml/resources.qrc
@@ -52,7 +54,7 @@ target_link_libraries(qt-web-search
             Qt5::Quick
             Qt5::Qml
             Qt5::QuickControls2
-            #Qt5::Network
+            Qt5::Network
         )
 
 
