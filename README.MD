@@ -15,27 +15,36 @@ https://github.com/catchorg/Catch2
 ## Build from sources
 
 ### Prerequisites
-
-
 * Compiler:
   - `with c++17 support`
 * Build tools:
   - `cmake` (version >= 3.15)
   - `clang-format` (if formatting is needed)
   - `Qt` (version >= 5.13.1`)
+  
+  Make sure that Qt5_DIR environment variable is set
 
 ### Build & Install
 
 ```bash
 git clone https://github.com/fryziuk/qt-web-search
-cd https://github.com/fryziuk/qt-web-search
-cmake -Bbuild -H.
-cmake --build build
+cd qt-web-search
+mkdir build
+cd build
+cmake ..
+make -j 12
 ```
 
 ### Run TEST
+From build directory
 ```bash
-./url_searcher_test
+./test/url_searcher_test
+```
+
+### Run App
+From build directory
+```bash
+./qt-web-search
 ```
 
 
