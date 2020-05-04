@@ -1,9 +1,10 @@
 #include "downloader.h"
-#include "utils.h"
 #include "profile.h"
 
 #include <stdexcept>
 #include <QtNetwork>
+
+constexpr auto SLEEP_TIMEOUT = 2000;
 
 QString downloader::download_page(const QString& url) {
     LOG_DURATION("Download page");
