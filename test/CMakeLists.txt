@@ -19,3 +19,4 @@ target_link_libraries(url_searcher_test
         catch2
         )
 
+add_clangformat(url_searcher_test)

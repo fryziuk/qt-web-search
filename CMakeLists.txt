@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 
 project(qt-web-search)
 
+include(cmake/clangformat.cmake)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -50,12 +52,13 @@ target_link_libraries(qt-web-search
         profiler
             url_utils
         PRIVATE
-            #Qt5::Core
             Qt5::Quick
             Qt5::Qml
             Qt5::QuickControls2
             Qt5::Network
         )
+
+add_clangformat(qt-web-search)
 
 
 add_subdirectory(test)
