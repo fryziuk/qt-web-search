@@ -5,7 +5,7 @@ import QtQuick.Window 2.13
 
 ApplicationWindow {
     id: mainWindow
-    width: 1000
+    width: 970
     height: 800
     visible: true
     minimumWidth: 800
@@ -15,13 +15,16 @@ ApplicationWindow {
         id: controller_id
     }
 
-    property int labelWidth: 90
+    property int labelWidth: 100
     property int textFieldWidth: 200
     property int rowHeight: 50
     property int textTopPadding: 20
     property int parentPadding: 20
     property int buttonWidth: 90
     property int spacingSize: 10
+    property int progressBarWidth: 300
+    property int rowWidth: 600
+    property int listViewHeight: 800
 
     Column {
         id: column
@@ -70,7 +73,7 @@ ApplicationWindow {
                 id: threadsText
                 width: textFieldWidth
                 height: rowHeight
-                value: 4
+                value: 8
             }
         }
 
@@ -95,7 +98,7 @@ ApplicationWindow {
                     top: 1000
                 }
                 placeholderText: qsTr("100")
-                text: "30"
+                text: "100"
             }
         }
 
@@ -148,19 +151,19 @@ ApplicationWindow {
             id: progressBar
             from: 0
             to: maxPagesText.text
-            width: 300
+            width: progressBarWidth
 
             value: controller_id.progressBar
         }
     }
 
     Rectangle {
-        width: 3 * textFieldWidth
-        height: 800
+        width: rowWidth
+        height: listViewHeight
         anchors.left: column.right
         anchors.top: parent.top
-        anchors.topMargin: 20
-        anchors.leftMargin: 20
+        anchors.topMargin: textTopPadding
+        anchors.leftMargin: textTopPadding
 
         ScrollView {
             anchors.fill: parent

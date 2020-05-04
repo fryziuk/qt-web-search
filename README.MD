@@ -1,16 +1,16 @@
 
 ## Description
-This project is QML app for BFS text web-search.
+This project is a QML app for BFS text web-search.
 
-Project include simple unit-tests. 
-Used single header catch2 library (header included to project)
+The project includes a simple unit-tests. 
+Used single header library  catch2 (header included to project)
 https://github.com/catchorg/Catch2
 
 ### Parameters
 1. The start URL
 2. The maximum number of threads
 3. The desired text
-4. Maximum number of crawls URLS
+4. Maximum number of crawls URLs
 
 ## Build from sources
 
@@ -46,5 +46,5 @@ From build directory
 ```bash
 ./qt-web-search
 ```
-
-
+### Tested platforms
+macOS Catalina

@@ -10,9 +10,6 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 
-##set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
-#include(CTest)
-
 find_package(Qt5 COMPONENTS Quick Core Network QuickControls2 REQUIRED)
 
 add_subdirectory(profiler)
