@@ -1,7 +1,8 @@
 #pragma once
 #include <QString>
 
-struct URL_SEARCH_RESUlT {
+struct URL_SEARCH_RESUlT
+{
     QString url;
     QString status;
     int index;

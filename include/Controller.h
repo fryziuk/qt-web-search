@@ -7,15 +7,16 @@
 #include <QObject>
 #include <QThreadPool>
 
-class Controller : public QObject {
+class Controller : public QObject
+{
     Q_OBJECT
-    Q_PROPERTY(web_search_result* searchResult READ getSearchResult NOTIFY searchResultChanged)
+    Q_PROPERTY(web_search_result *searchResult READ getSearchResult NOTIFY searchResultChanged)
     Q_PROPERTY(int progressBar READ progressBar NOTIFY progressBarChanged)
 
 public:
-    explicit Controller(QObject* parent = nullptr);
+    explicit Controller(QObject *parent = nullptr);
 
-    web_search_result* getSearchResult() const;
+    web_search_result *getSearchResult() const;
     int progressBar() const;
 
     ~Controller();
@@ -32,14 +33,15 @@ signals:
 
 public slots:
 
-    void start(const QString& url, const QString& search_string, qint32 max_threads, qint32 max_urls);
+    void start(const QString &url, const QString &search_string, qint32 max_threads,
+               qint32 max_urls);
 
     void stop();
 
     void set_status(int status);
 
 private:
-    web_search_result* p_result_model;
+    web_search_result *p_result_model;
 
     QThreadPool thread_pool_;
     concurrent_queue<QString> urls_queue;

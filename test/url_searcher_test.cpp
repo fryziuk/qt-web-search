@@ -6,7 +6,8 @@
 static constexpr auto keyword_found = "Found";
 static constexpr auto keyword_not_found = "Not found";
 
-TEST_CASE( "Basic search test", "[find_keyword]" ) {
+TEST_CASE("Basic search test", "[find_keyword]")
+{
     {
         QString page = "A b A";
         QString needle = "b";
@@ -28,7 +29,8 @@ TEST_CASE( "Basic search test", "[find_keyword]" ) {
     }
 }
 
-TEST_CASE( "Html search test", "[find_keyword]" ) {
+TEST_CASE("Html search test", "[find_keyword]")
+{
     QString page = "<!DOCTYPE html>\n"
                    "<html>\n"
                    "<body>\n"
@@ -52,7 +54,8 @@ TEST_CASE( "Html search test", "[find_keyword]" ) {
         REQUIRE(res == keyword_not_found);
     }
 }
-TEST_CASE( "Html search URLS no URLS", "[get_urls_from_page]" ) {
+TEST_CASE("Html search URLS no URLS", "[get_urls_from_page]")
+{
     QString page = "<!DOCTYPE html>\n"
                    "<html>\n"
                    "<body>\n"
@@ -70,9 +73,9 @@ TEST_CASE( "Html search URLS no URLS", "[get_urls_from_page]" ) {
     }
 }
 
-
 // Probably not good idea to add this one to unittest
-TEST_CASE( "Html search URLS", "[get_urls_from_page]" ) {
+TEST_CASE("Html search URLS", "[get_urls_from_page]")
+{
     QString page = "<!DOCTYPE html>\n"
                    "<html>\n"
                    "<body>\n"
@@ -95,5 +98,3 @@ TEST_CASE( "Html search URLS", "[get_urls_from_page]" ) {
         REQUIRE(res[2] == "https://www.facebook.com");
     }
 }
-
-

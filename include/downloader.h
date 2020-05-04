@@ -1,7 +1,8 @@
 #pragma once
 #include <QString>
 
-class downloader {
+class downloader
+{
 public:
-    static QString download_page(const QString& url);
+    static QString download_page(const QString &url);
 };

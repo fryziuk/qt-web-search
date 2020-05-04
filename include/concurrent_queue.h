@@ -5,16 +5,17 @@
 #include <queue>
 #include <set>
 
-template <typename T>
-class concurrent_queue {
+template<typename T>
+class concurrent_queue
+{
     std::queue<T> queue_;
     std::set<T> set_;
     mutable std::mutex m_;
     std::condition_variable data_cond_;
 
-    concurrent_queue& operator=(const concurrent_queue&) = delete;
+    concurrent_queue &operator=(const concurrent_queue &) = delete;
 
-    concurrent_queue(const concurrent_queue& other) = delete;
+    concurrent_queue(const concurrent_queue &other) = delete;
 
 public:
     concurrent_queue() {}
@@ -35,7 +36,7 @@ public:
     {
         {
             std::lock_guard<std::mutex> lock(m_);
-            for (auto& item : items) {
+            for (auto &item : items) {
                 if (set_.find(item) == set_.end()) {
                     queue_.push(std::move(item));
                     set_.emplace(queue_.back());
@@ -45,7 +46,7 @@ public:
         data_cond_.notify_one();
     }
 
-    bool try_and_pop(T& popped_item)
+    bool try_and_pop(T &popped_item)
     {
         std::lock_guard<std::mutex> lock(m_);
         if (queue_.empty()) {

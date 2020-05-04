@@ -5,16 +5,14 @@
 #include <QObject>
 #include <map>
 
-class web_search_result : public QAbstractListModel {
+class web_search_result : public QAbstractListModel
+{
     Q_OBJECT
-    enum {
-        Url = Qt::UserRole,
-        Status
-    };
+    enum { Url = Qt::UserRole, Status };
 
 public:
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     virtual QHash<int, QByteArray> roleNames() const override;
 
 public slots:

@@ -1,10 +1,10 @@
 #include "web_search_result.h"
 
-int web_search_result::rowCount(const QModelIndex& parent) const
+int web_search_result::rowCount(const QModelIndex &parent) const
 {
     return row_search_result.size();
 }
-QVariant web_search_result::data(const QModelIndex& index, int role) const
+QVariant web_search_result::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();

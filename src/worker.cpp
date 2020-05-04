@@ -8,22 +8,18 @@
 
 constexpr auto errorPrefix = "Error: ";
 
-worker::worker(concurrent_queue<QString>& urls_queue,
-    QString keyword,
-    std::atomic<int>& status,
-    int depth,
-    std::function<void(URL_SEARCH_RESUlT)> callback,
-    int workerId)
-    : urls_queue_(urls_queue)
-    , keyword_(keyword)
-    , thread_status_(status)
-    , search_depth(depth)
-    , worker_callback_(callback)
-    , worker_id_(workerId)
+worker::worker(concurrent_queue<QString> &urls_queue, QString keyword, std::atomic<int> &status,
+               int depth, std::function<void(URL_SEARCH_RESUlT)> callback, int workerId)
+    : urls_queue_(urls_queue),
+      keyword_(keyword),
+      thread_status_(status),
+      search_depth(depth),
+      worker_callback_(callback),
+      worker_id_(workerId)
 {
 }
 
-void worker::add_urls_to_queue(const QString& pageHtml)
+void worker::add_urls_to_queue(const QString &pageHtml)
 {
     urls_queue_.push(url_searcher::get_urls_from_page(pageHtml));
 }
@@ -36,7 +32,7 @@ QString worker::process_page()
         QString page = downloader::download_page(url_);
         threadResult = url_searcher::find_keyword(page, keyword_);
         add_urls_to_queue(page);
-    } catch (exception& ex) {
+    } catch (exception &ex) {
         threadResult = errorPrefix + static_cast<QString>(ex.what());
     }
 
