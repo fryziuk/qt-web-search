@@ -2,10 +2,6 @@
 #include "web_search_result.h"
 #include "worker.h"
 
-#include <QFont>
-#include <QQuickView>
-#include <QtGui/QGuiApplication>
-#include <QtQml>
 #include <functional>
 
 Controller::Controller(QObject *parent)
